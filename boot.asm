@@ -1,26 +1,31 @@
-[org 0x7c00]
-[bits 16]
+[bits 32]
 
-start:
-    mov si, msg
-    call print_str
+MB_MAGIC    equ 0x1BADB002
+MB_FLAGS    equ (1 << 0) | (1 << 1)
+MB_CHECKSUM equ -(MB_MAGIC + MB_FLAGS)
 
+section .multiboot
+align 4
+    dd MB_MAGIC
+    dd MB_FLAGS
+    dd MB_CHECKSUM
+
+section .text
+global _start
+extern kmain
+
+_start:
+    cli
+    mov esp, stack_top 
+
+    call kmain
+
+    hlt
     jmp $
 
-print_str:
-    mov ah, 0x0e
-
-.loop:
-    lodsb
-    cmp al, 0
-    je .done
-    int 0x10
-    jmp .loop
-
-.done:
-    ret
-
-msg: db 'Hello OS :3', 0
-
-times 510 - ($ - $$) db 0
-dw 0xaa55
+section .bss
+align 16
+stack_bottom:
+    resb 16384
+    
+stack_top:
