@@ -128,19 +128,13 @@ char get_key() {
         }
 
         if (scancode >= 0x47 && scancode <= 0x53) {
-            char numpad_chars[] = "789-456+1230.";
-            if (scancode >= 0x47 && scancode <= 0x53) {
-                putchar(numpad_chars[scancode - 0x47], 0x0F);
-                continue;
-            }
+            const char *numpad = "789-456+1230.";
+            char c = numpad[scancode - 0x47];
+            if (c) return c;
         }
 
-        char c = 0;
         bool use_shift = shift || caps;
-        if (use_shift)
-            c = kbd_shifted[scancode];
-        else
-            c = kbd_normal[scancode];
+        char c = use_shift ? kbd_shifted[scancode] : kbd_normal[scancode];
 
         if (c != 0) return c;
     }
