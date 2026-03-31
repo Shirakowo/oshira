@@ -105,10 +105,15 @@ char get_key() {
             continue;
         }
 
-        if (scancode >= 0x3B && scancode <= 0x44) {
+        if (scancode >= 0x3B && scancode <= 0x43) {
             print(" [F", 0x0C);
             putchar('1' + (scancode - 0x3B), 0x0C);
             print("]", 0x0C);
+            continue;
+        }
+
+        if (scancode == 0x44) {
+            print(" [F10]", 0x0C);
             continue;
         }
 
