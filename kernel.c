@@ -85,6 +85,14 @@ void print_line(const char *str) {
     putchar('\n', 0x0F);
 }
 
+void to_lower(char *str) {
+    for (int i = 0; str[i] != '\0'; i++) {
+        if (str[i] >= 'A' && str[i] <= 'Z') {
+            str[i] = str[i] + 32;   // 'A' -> 'a'
+        }
+    }
+}
+
 char get_key() {
     while (1) {
         if ((inb(0x64) & 1) == 0) continue;
@@ -155,6 +163,8 @@ int strncmp(const char *s1, const char *s2, int n) {
 
 void execute_command(char *cmd) {
     if (cmd[0] == '\0') return;
+
+    to_lower(cmd);
 
     if (strcmp(cmd, "help") == 0) {
         print_line("Available commands:");
